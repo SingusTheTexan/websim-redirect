@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+</head>
+<body>
+  <p>Redirecting to Websim app…</p>
+  <script>
+    // Get query params from Google (?code=...)
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+    
+    if (code) {
+      // Redirect back into your app with custom scheme
+      window.location = "websim://oauth2redirect?code=" + code + "&state=" + state;
+    } else {
+      document.body.innerHTML = "<p>Missing code parameter.</p>";
+    }
+  </script>
+</body>
+</html>
