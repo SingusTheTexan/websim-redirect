@@ -2,21 +2,27 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Redirecting…</title>
+  <title>Redirecting to Websim Page...</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-  <p>Redirecting to Websim app…</p>
+  <p>Redirecting to the app…</p>
   <script>
-    // Get query params from Google (?code=...)
+    // Parse Google's response from URL (ID token or code)
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+    const code = params.get("code");       // for auth code flow
+    const credential = params.get("credential"); // for token flow
     const state = params.get("state");
-    
-    if (code) {
-      // Redirect back into your app with custom scheme
-      window.location = "websim://oauth2redirect?code=" + code + "&state=" + state;
+
+    if (code || credential) {
+      const redirectScheme = "websim://oauth2redirect";
+      let fullUrl = `${redirectScheme}?`;
+      if (code) fullUrl += `code=${code}`;
+      if (credential) fullUrl += `credential=${credential}`;
+      if (state) fullUrl += `&state=${state}`;
+      window.location.href = fullUrl;
     } else {
-      document.body.innerHTML = "<p>Missing code parameter.</p>";
+      document.body.innerHTML = "<p>Error: missing code/credential.</p>";
     }
   </script>
 </body>
